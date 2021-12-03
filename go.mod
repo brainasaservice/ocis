@@ -46,7 +46,7 @@ require (
 	github.com/olekukonko/tablewriter v0.0.5
 	github.com/onsi/ginkgo v1.16.5
 	github.com/onsi/gomega v1.17.0
-	github.com/owncloud/open-graph-api-go v0.0.0-20211018134924-bea0e2a6ec3e
+	github.com/owncloud/libre-graph-api-go v0.3.0
 	github.com/pkg/errors v0.9.1
 	github.com/prometheus/client_golang v1.11.0
 	github.com/rs/zerolog v1.26.0
@@ -55,7 +55,7 @@ require (
 	github.com/stretchr/testify v1.7.0
 	github.com/thejerf/suture/v4 v4.0.1
 	github.com/urfave/cli/v2 v2.3.0
-	github.com/yaegashi/msgraph.go v0.1.4
+	github.com/yaegashi/msgraph.go v0.1.1-0.20200221123608-2d438cf2a7cc
 	go-micro.dev/v4 v4.4.0
 	go.opencensus.io v0.23.0
 	go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc v0.27.0
@@ -199,8 +199,6 @@ require (
 	github.com/prometheus/common v0.32.1 // indirect
 	github.com/prometheus/procfs v0.7.3 // indirect
 	github.com/prometheus/statsd_exporter v0.22.2 // indirect
-	github.com/rickb777/date v1.16.1 // indirect
-	github.com/rickb777/plural v1.4.1 // indirect
 	github.com/rivo/uniseg v0.2.0 // indirect
 	github.com/rs/cors v1.8.0 // indirect
 	github.com/rs/xid v1.3.0 // indirect
