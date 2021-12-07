@@ -123,6 +123,10 @@ class HttpRequestHelper {
 			self::debugRequest($request, $user, $password);
 		}
 
+		echo "########################### Request:Init ###########################\n";
+		var_dump($request);
+		echo "########################### Request:End ###########################\n";
+
 		// echo "########################### REQUEST ###########################\n";
 		// var_dump($request);
 		// echo "########################### REQUEST ###########################\n";

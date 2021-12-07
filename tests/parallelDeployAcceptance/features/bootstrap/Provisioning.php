@@ -753,7 +753,51 @@ trait Provisioning {
 		// -------------
 		\array_push($this->ldapCreatedUsers, $setting["userid"]);
 		$this->theLdapUsersHaveBeenReSynced();
+		// $this->syncLdapUsers();
 	}
+
+	// public function syncLdapUsers(): void {
+	// 	// $occResult = SetupHelper::runOcc(
+	// 	// 	['user:sync', 'OCA\User_LDAP\User_Proxy', '-m', 'remove'],
+	// 	// 	$this->getStepLineRef(),
+	// 	// );
+
+	// 	// if ($occResult['code'] !== "0") {
+	// 	// 	throw new Exception(__METHOD__ . " could not sync LDAP users " . $occResult['stdErr']);
+	// 	// }
+
+	// 	$response = OcsApiHelper::sendRequest(
+	// 		$this->getBaseUrl(),
+	// 		"admin",
+	// 		"admin",
+	// 		'GET',
+	// 		\sprintf("/cloud/users/%s", "Alice"),
+	// 		$this->getStepLineRef()
+	// 	);
+	// 	echo "########################### Response:OCIS:Start ###########################\n";
+	// 	var_dump($response->getStatusCode());
+	// 	echo "########################### Header ###########################\n";
+	// 	var_dump($response->getHeaders());
+	// 	echo "########################### Body ###########################\n";
+	// 	var_dump($response->getBody()->getContents());
+	// 	echo "########################### Response:OCIS:End ###########################\n";
+
+	// 	$response = OcsApiHelper::sendRequest(
+	// 		$this->getOC10BaseUrl(),
+	// 		"admin",
+	// 		"admin",
+	// 		'GET',
+	// 		\sprintf("/cloud/users/%s", "Alice"),
+	// 		$this->getStepLineRef()
+	// 	);
+	// 	echo "########################### Response:OC10:Start ###########################\n";
+	// 	var_dump($response->getStatusCode());
+	// 	echo "########################### Header ###########################\n";
+	// 	var_dump($response->getHeaders());
+	// 	echo "########################### Body ###########################\n";
+	// 	var_dump($response->getBody()->getContents());
+	// 	echo "########################### Response:OC10:End ###########################\n";
+	// }
 
 	/**
 	 * @param string $group group name
@@ -2919,6 +2963,38 @@ trait Provisioning {
 	public function initializeUsers(array $users):void {
 		$url = "/cloud/users/%s";
 		foreach ($users as $user) {
+			$res = OcsApiHelper::sendRequest(
+				$this->getOC10BaseUrl(),
+				"admin",
+				"admin",
+				'GET',
+				"/cloud/users",
+				$this->getStepLineRef()
+			);
+			echo "########################### <GETALLUSERS> ###########################\n";
+			var_dump($res->getStatusCode());
+			echo "########################### Header ###########################\n";
+			var_dump($res->getHeaders());
+			echo "########################### Body ###########################\n";
+			var_dump($res->getBody()->getContents());
+			echo "########################### </GETALLUSERS> ###########################\n";
+
+			$res = OcsApiHelper::sendRequest(
+				$this->getOC10BaseUrl(),
+				$user,
+				$this->getPasswordForUser($user),
+				'GET',
+				\sprintf($url, $user),
+				$this->getStepLineRef()
+			);
+			echo "########################### Response:OC10:Start ###########################\n";
+			var_dump($res->getStatusCode());
+			echo "########################### Header ###########################\n";
+			var_dump($res->getHeaders());
+			echo "########################### Body ###########################\n";
+			var_dump($res->getBody()->getContents());
+			echo "########################### Response:OC10:End ###########################\n";
+
 			$response = OcsApiHelper::sendRequest(
 				$this->getBaseUrl(),
 				$user,
@@ -2928,13 +3004,13 @@ trait Provisioning {
 				$this->getStepLineRef()
 			);
 			$this->setResponse($response);
-			echo "########################### Response:Init ###########################\n";
+			echo "########################### Response:OCIS:Start ###########################\n";
 			var_dump($response->getStatusCode());
 			echo "########################### Header ###########################\n";
 			var_dump($response->getHeaders());
 			echo "########################### Body ###########################\n";
 			var_dump($response->getBody()->getContents());
-			echo "########################### Response:Init ###########################\n";
+			echo "########################### Response:OCIS:Start ###########################\n";
 			$this->theHTTPStatusCodeShouldBe(200);
 		}
 	}
