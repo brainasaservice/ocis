@@ -14,81 +14,81 @@
       "routes": [
         {
           "endpoint": "/",
-          "backend": "https://ocis:9100"
+          "backend": "http://localhost:9100"
         },
         {
           "endpoint": "/.well-known/",
-          "backend": "https://ocis:9130"
+          "backend": "http://localhost:9130"
         },
         {
           "type": "regex",
           "endpoint": "/ocs/v[12].php/cloud/user/signing-key",
-          "backend": "https://ocis:9110"
+          "backend": "http://localhost:9110"
         },
         {
           "endpoint": "/ocs/",
-          "backend": "https://ocis:9140"
+          "backend": "http://localhost:9140"
         },
         {
           "type": "query",
           "endpoint": "/remote.php/?preview=1",
-          "backend": "https://ocis:9115"
+          "backend": "http://localhost:9115"
         },
         {
           "endpoint": "/remote.php/",
-          "backend": "https://ocis:9140"
+          "backend": "http://localhost:9140"
         },
         {
           "endpoint": "/dav/",
-          "backend": "https://ocis:9140"
+          "backend": "http://localhost:9140"
         },
         {
           "endpoint": "/webdav/",
-          "backend": "https://ocis:9140"
+          "backend": "http://localhost:9140"
         },
         {
           "endpoint": "/status.php",
-          "backend": "https://ocis:9140"
+          "backend": "http://localhost:9140"
         },
         {
           "endpoint": "/index.php/",
-          "backend": "https://ocis:9140"
+          "backend": "http://localhost:9140"
         },
         {
           "endpoint": "/index.php/login",
-          "backend": "https://ocis:9100"
+          "backend": "http://localhost:9100"
         },
         {
           "endpoint": "/login",
-          "backend": "https://ocis:9100"
+          "backend": "http://localhost:9100"
         },
         {
           "endpoint": "/data",
-          "backend": "https://ocis:9140"
+          "backend": "http://localhost:9140"
         },
         {
           "endpoint": "/graph/",
-          "backend": "https://ocis:9120"
+          "backend": "http://localhost:9120"
         },
         {
           "endpoint": "/app/",
-          "backend": "https://ocis:9140"
+          "backend": "http://localhost:9140"
         },
         {
           "endpoint": "/archiver",
-          "backend": "https://ocis:9140"
+          "backend": "http://localhost:9140"
         },
         {
           "endpoint": "/graph-explorer/",
-          "backend": "https://ocis:9135"
+          "backend": "http://localhost:9135"
         },
         {
           "endpoint": "/api/v0/settings",
-          "backend": "https://ocis:9190"
+          "backend": "http://localhost:9190"
         },
         {
           "endpoint": "/settings.js",
-          "backend": "https://ocis:9190"
+          "backend": "http://localhost:9190"
         }
       ]
     },
@@ -101,7 +101,7 @@
         },
         {
           "endpoint": "/data",
-          "backend": "https://ocis:9140"
+          "backend": "http://localhost:9140"
         }
       ]
     }
