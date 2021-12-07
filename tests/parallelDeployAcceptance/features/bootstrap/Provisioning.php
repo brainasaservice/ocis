@@ -2965,26 +2965,10 @@ trait Provisioning {
 		foreach ($users as $user) {
 			$res = OcsApiHelper::sendRequest(
 				$this->getOC10BaseUrl(),
-				"admin",
-				"admin",
+				"einstein",
+				"relativity",
 				'GET',
-				"/cloud/users",
-				$this->getStepLineRef()
-			);
-			echo "########################### <GETALLUSERS> ###########################\n";
-			var_dump($res->getStatusCode());
-			echo "########################### Header ###########################\n";
-			var_dump($res->getHeaders());
-			echo "########################### Body ###########################\n";
-			var_dump($res->getBody()->getContents());
-			echo "########################### </GETALLUSERS> ###########################\n";
-
-			$res = OcsApiHelper::sendRequest(
-				$this->getOC10BaseUrl(),
-				$user,
-				$this->getPasswordForUser($user),
-				'GET',
-				\sprintf($url, $user),
+				"/cloud/users/einstein",
 				$this->getStepLineRef()
 			);
 			echo "########################### Response:OC10:Start ###########################\n";
@@ -2997,10 +2981,10 @@ trait Provisioning {
 
 			$response = OcsApiHelper::sendRequest(
 				$this->getBaseUrl(),
-				$user,
-				$this->getPasswordForUser($user),
+				"einstein",
+				"relativity",
 				'GET',
-				\sprintf($url, $user),
+				"/cloud/users/einstein",
 				$this->getStepLineRef()
 			);
 			$this->setResponse($response);
@@ -3010,7 +2994,17 @@ trait Provisioning {
 			var_dump($response->getHeaders());
 			echo "########################### Body ###########################\n";
 			var_dump($response->getBody()->getContents());
-			echo "########################### Response:OCIS:Start ###########################\n";
+			echo "########################### Response:OCIS:End ###########################\n";
+
+			$response = OcsApiHelper::sendRequest(
+				$this->getBaseUrl(),
+				$user,
+				$this->getPasswordForUser($user),
+				'GET',
+				\sprintf($url, $user),
+				$this->getStepLineRef()
+			);
+			$this->setResponse($response);
 			$this->theHTTPStatusCodeShouldBe(200);
 		}
 	}
