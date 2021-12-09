@@ -5,7 +5,7 @@ Feature: sharing files and folders
 
 
   Background:
-    Given using "ocis" as owncloud selector
+    Given using "oc10" as owncloud selector
     And user "Alice" has been created with default attributes and without skeleton files
     And user "Brian" has been created with default attributes and without skeleton files
 

@@ -86,24 +86,3 @@ homeDirectory: /home/moss
 ownCloudUUID:: MDU4YmZmOTUtNjcwOC00ZmU1LTkxZTQtOWVhM2QzNzc1ODhi
 userPassword:: e1NTSEF9N0hEdTRoMkFDVExFWWt4U0RtSDZVQjhmUlpKRExDZDc=
 ownCloudSelector: ocis
-
-dn: uid=admin,ou=users,dc=owncloud,dc=com
-objectClass: inetOrgPerson
-objectClass: organizationalPerson
-objectClass: ownCloud
-objectClass: person
-objectClass: posixAccount
-objectClass: top
-uid: admin
-givenName: Admin
-sn: Admin
-cn: admin
-displayName: Admin
-description: An admin for this oCIS instance.
-mail: admin@example.org
-uidNumber: 20004
-gidNumber: 30000
-homeDirectory: /home/admin
-ownCloudUUID:: ZGRjMjAwNGMtMDk3Ny0xMWViLTlkM2YtYTc5Mzg4OGNkMGY4
-userPassword:: e1NTSEF9UWhmaFB3dERydTUydURoWFFObDRMbzVIckI3TkI5Nmo=
-ownCloudSelector: oc10
