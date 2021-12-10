@@ -21,10 +21,10 @@ DRONE_CONFIG_PATH = "/drone/src/tests/parallelDeployAcceptance/drone"
 
 def main(ctx):
     pipelines = []
-    pipelines = parallelDeployAcceptance()
+    pipelines = acceptancePipeline()
     return pipelines
 
-def parallelDeployAcceptance():
+def acceptancePipeline():
     return {
         "kind": "pipeline",
         "type": "docker",
@@ -39,68 +39,14 @@ def parallelDeployAcceptance():
             makeNodeGenerate() +
             makeGoGenerate() +
             buildOCIS() + 
-            [
-                {
-                    "name": "wait-for-services",
-                    "image": OC_CI_WAITFOR,
-                    "commands": [
-                        "wait-for -it oc10-db:3306 -t 300",
-                        "wait-for -it openldap:636 -t 300",
-                    ],
-                }
-            ] + 
+            waitForServices() + 
             oC10Service() + 
-            [
-                {
-                    "name": "wait-for-oc10",
-                    "image": OC_CI_WAITFOR,
-                    "commands": [
-                        "wait-for -it oc10:8080 -t 300",
-                    ],
-                    "depends_on": ["wait-for-services"]
-                },
-            ] +
+            waitForOC10() +
+            owncloudLog() +
             fixPermissions() +
             ocisServer() + 
-            [
-                {
-                    "name": "wait-for-ocis",
-                    "image": OC_CI_WAITFOR,
-                    "commands": [
-                        "wait-for -it ocis:9200 -t 300",
-                    ],
-                    "depends_on": ["wait-for-oc10"],
-                }
-            ] + 
-            owncloudLog() + 
-            [
-                {
-                    "name": "ApiTests",
-                    "image": OC_CI_PHP,
-                    "environment": {
-                        "TEST_SERVER_URL": OCIS_URL,
-                        "TEST_OC10_URL": OC10_URL,
-                        "PARALLEL_DEPLOY": "true",
-                        "TEST_OCIS": "true",
-                        "TEST_WITH_LDAP": "true",
-                        "REVA_LDAP_PORT" : 636,
-                        "REVA_LDAP_BASE_DN": "dc=owncloud,dc=com",
-                        "REVA_LDAP_HOSTNAME": "openldap",
-                        "REVA_LDAP_BIND_DN": "cn=admin,dc=owncloud,dc=com",
-                        "SKELETON_DIR": "/var/www/owncloud/apps/testing/data/apiSkeleton",
-                    },
-                    "commands": [
-                        "make -C ./tests/parallelDeployAcceptance test-parallel-deploy",
-                    ],
-                    "depends_on": ["composer-install", "wait-for-oc10", "wait-for-ocis"],
-                    "volumes": [
-                        {
-                            "name": "core-apps",
-                            "path": "/var/www/owncloud/apps",
-                        },
-                    ]
-                }
-            ],
+            waitForOCIS() + 
+            apiTests(),
         "services": oc10DbService() +
                     keycloakDbService() +
                     ldapService() +
@@ -143,58 +89,80 @@ def parallelDeployAcceptance():
         }
     }
 
-def makeNodeGenerate():
-    return [
-        {
-            "name": "generate-nodejs",
-            "image": OC_CI_NODEJS,
-            "commands": [
-                "make ci-node-generate",
-            ],
-            "volumes": [
-                {
-                    "name": "gopath",
-                    "path": "/go",
-                },
-            ],
+def apiTests():
+    return [{
+        "name": "API Tests",
+        "image": OC_CI_PHP,
+        "environment": {
+            "TEST_SERVER_URL": OCIS_URL,
+            "TEST_OC10_URL": OC10_URL,
+            "PARALLEL_DEPLOY": "true",
+            "TEST_OCIS": "true",
+            "TEST_WITH_LDAP": "true",
+            "REVA_LDAP_PORT" : 636,
+            "REVA_LDAP_BASE_DN": "dc=owncloud,dc=com",
+            "REVA_LDAP_HOSTNAME": "openldap",
+            "REVA_LDAP_BIND_DN": "cn=admin,dc=owncloud,dc=com",
+            "SKELETON_DIR": "/var/www/owncloud/apps/testing/data/apiSkeleton",
         },
-    ]
+        "commands": [
+            "make -C %s/tests/parallelDeployAcceptance test-parallel-deploy" % (DRONE_CONFIG_PATH),
+        ],
+        "depends_on": ["composer-install", "wait-for-oc10", "wait-for-ocis"],
+        "volumes": [
+            {
+                "name": "core-apps",
+                "path": "/var/www/owncloud/apps",
+            },
+        ]
+    }]
+
+def makeNodeGenerate():
+    return [{
+        "name": "generate-nodejs",
+        "image": OC_CI_NODEJS,
+        "commands": [
+            "make ci-node-generate",
+        ],
+        "volumes": [
+            {
+                "name": "gopath",
+                "path": "/go",
+            },
+        ],
+    }]
 
 def makeGoGenerate():
-    return [
-        {
-            "name": "generate-go",
-            "image": OC_CI_GOLANG,
-            "commands": [
-                "whoami",
-                "make ci-go-generate",
-            ],
-            "volumes": [
-                {
-                    "name": "gopath",
-                    "path": "/go",
-                },
-            ],
-        },
-    ]
+    return [{
+        "name": "generate-go",
+        "image": OC_CI_GOLANG,
+        "commands": [
+            "whoami",
+            "make ci-go-generate",
+        ],
+        "volumes": [
+            {
+                "name": "gopath",
+                "path": "/go",
+            },
+        ],
+    }]
 
 def buildOCIS():
-    return [
-        {
-            "name": "build-ocis",
-            "image": OC_CI_GOLANG,
-            "commands": [
-                "make -C ocis build",
-            ],
-            "volumes": [
-                {
-                    "name": "gopath",
-                    "path": "/go",
-                },
-            ],
-            "depends_on": ["generate-nodejs", "generate-go"]
-        },
-    ]
+    return [{
+        "name": "build-ocis",
+        "image": OC_CI_GOLANG,
+        "commands": [
+            "make -C ocis build",
+        ],
+        "volumes": [
+            {
+                "name": "gopath",
+                "path": "/go",
+            },
+        ],
+        "depends_on": ["generate-nodejs", "generate-go"]
+    }]
 
 def ocisServer():
     environment = {
@@ -259,7 +227,6 @@ def ocisServer():
         "OCIS_LOG_LEVEL": "error",
         "OCIS_URL": OCIS_URL,
         "PROXY_TLS": "true",
-        "PROXY_CONFIG_FILE": "%s/ocis/proxy.json" % (DRONE_CONFIG_PATH), # Doesn't exists
         # change default secrets
         "OCIS_JWT_SECRET": "Pive-Fumkiu4",
         "STORAGE_TRANSFER_SECRET": "replace-me-with-a-transfer-secret",
@@ -273,8 +240,9 @@ def ocisServer():
         "environment": environment,
         "detach": True,
         "commands": [
+            "whoami",
             "apk add mailcap",  # install /etc/mime.types
-            "%s/ocis/entrypoint-override.sh" % (DRONE_CONFIG_PATH),
+            "%s/ocis/server.sh" % (DRONE_CONFIG_PATH),
         ],
         "volumes": [
             {
@@ -285,9 +253,13 @@ def ocisServer():
                 "name": "proxy-config",
                 "path": "/etc/ocis",
             },
+            {
+                "name": "gopath",
+                "path": "/go",
+            },
         ],
-        "user": "33:33",
-        "depends_on": ["fix-permissions"],
+        # "user": "0:0",
+        "depends_on": ["fix-permissions", "build-ocis"],
     }]
 
 def oC10Service():
@@ -518,7 +490,7 @@ def owncloudLog():
                 "path": "/mnt/data",
             }
         ],
-        "depends_on": ["wait-for-oc10", "wait-for-ocis"]
+        "depends_on": ["wait-for-oc10"]
     }]
 
 def fixPermissions():
@@ -540,6 +512,36 @@ def fixPermissions():
                 "name": "data",
                 "path": "/mnt/data",
             }
+        ],
+        "depends_on": ["wait-for-oc10"],
+    }]
+
+def waitForServices():
+    return [{
+        "name": "wait-for-services",
+        "image": OC_CI_WAITFOR,
+        "commands": [
+            "wait-for -it oc10-db:3306 -t 300",
+            "wait-for -it openldap:636 -t 300",
+        ],
+    }]
+
+def waitForOC10():
+    return [{
+        "name": "wait-for-oc10",
+        "image": OC_CI_WAITFOR,
+        "commands": [
+            "wait-for -it oc10:8080 -t 300",
+        ],
+        "depends_on": ["wait-for-services"]
+    }]
+
+def waitForOCIS():
+    return [{
+        "name": "wait-for-ocis",
+        "image": OC_CI_WAITFOR,
+        "commands": [
+            "wait-for -it ocis:9200 -t 300",
         ],
         "depends_on": ["wait-for-oc10"],
     }]
