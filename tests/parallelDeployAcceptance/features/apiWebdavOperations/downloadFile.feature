@@ -123,7 +123,7 @@ Feature: download file
     Examples:
       | dav_version |
       | old         |
-    #   | new         |
+      | new         |
 
 
   Scenario Outline: Downloading a file should serve security headers

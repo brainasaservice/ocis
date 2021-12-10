@@ -269,10 +269,11 @@ def ocisServer():
 
     return [{
         "name": "ocis",
-        "image": OCIS_IMG,
+        "image": OC_CI_GOLANG,
         "environment": environment,
         "detach": True,
         "commands": [
+            "apk add mailcap",  # install /etc/mime.types
             "%s/ocis/entrypoint-override.sh" % (DRONE_CONFIG_PATH),
         ],
         "volumes": [

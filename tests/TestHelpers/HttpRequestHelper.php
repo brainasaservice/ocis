@@ -123,10 +123,6 @@ class HttpRequestHelper {
 			self::debugRequest($request, $user, $password);
 		}
 
-		// echo "########################### Request:Init ###########################\n";
-		// var_dump($request);
-		// echo "########################### Request:End ###########################\n";
-
 		// The exceptions that might happen here include:
 		// ConnectException - in that case there is no response. Don't catch the exception.
 		// RequestException - if there is something in the response then pass it back.

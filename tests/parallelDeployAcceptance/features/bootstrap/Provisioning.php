@@ -2918,13 +2918,6 @@ trait Provisioning {
 				$this->getStepLineRef()
 			);
 			$this->setResponse($response);
-			// echo "########################### <Response> ###########################\n";
-			// var_dump($response->getStatusCode());
-			// echo "########################### Header ###########################\n";
-			// var_dump($response->getHeaders());
-			// echo "########################### Body ###########################\n";
-			// var_dump($response->getBody()->getContents());
-			// echo "########################### </Response> ###########################\n";
 			$this->theHTTPStatusCodeShouldBe(200);
 		}
 	}
