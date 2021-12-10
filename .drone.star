@@ -106,7 +106,7 @@ def apiTests():
             "SKELETON_DIR": "/var/www/owncloud/apps/testing/data/apiSkeleton",
         },
         "commands": [
-            "make -C %s/tests/parallelDeployAcceptance test-parallel-deploy" % (DRONE_CONFIG_PATH),
+            "make -C ./tests/parallelDeployAcceptance test-paralleldeployment-api",
         ],
         "depends_on": ["composer-install", "wait-for-oc10", "wait-for-ocis"],
         "volumes": [
@@ -543,5 +543,5 @@ def waitForOCIS():
         "commands": [
             "wait-for -it ocis:9200 -t 300",
         ],
-        "depends_on": ["wait-for-oc10"],
+        "depends_on": ["build-ocis"],
     }]

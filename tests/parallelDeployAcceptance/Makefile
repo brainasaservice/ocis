@@ -1,5 +1,5 @@
-.PHONY: test-parallel-deploy
+.PHONY: test-paralleldeployment-api
 
-test-parallel-deploy:
-	@echo "Running tests for parallel deployment:"
+test-paralleldeployment-api:
+	@echo "Running API tests for parallel deployment:"
 	../../vendor-bin/behat/vendor/bin/behat --config=./config/behat.yml
