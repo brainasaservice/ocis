@@ -37,9 +37,9 @@ def acceptancePipeline():
         "steps":
             composerInstall() +
             copyConfigs() +
-            makeNodeGenerate() +
-            makeGoGenerate() +
-            buildOCIS() + 
+            # makeNodeGenerate() +
+            # makeGoGenerate() +
+            # buildOCIS() + 
             waitForServices() + 
             oC10Service() + 
             waitForOC10() +
@@ -237,11 +237,13 @@ def ocisServer():
 
     return [{
         "name": "ocis",
-        "image": OC_CI_ALPINE,
+        "image": OCIS_IMG,
         "environment": environment,
         "detach": True,
         "commands": [
             "whoami",
+            "cd /mnt/data",
+            "ls -al",
             "%s/ocis/server.sh" % (DRONE_CONFIG_PATH),
         ],
         "volumes": [
@@ -259,7 +261,7 @@ def ocisServer():
             },
         ],
         "user": "33:33",
-        "depends_on": ["fix-permissions", "build-ocis"],
+        "depends_on": ["fix-permissions"],
     }]
 
 def oC10Service():
@@ -502,6 +504,8 @@ def fixPermissions():
             "chown -R www-data:www-data /var/www/owncloud/apps",
             "chmod -R 777 /var/www/owncloud/apps",
             "chmod -R 777 /mnt/data/",
+            "cd /mnt/data",
+            "ls -al",
         ],
         "volumes": [
             {
@@ -543,5 +547,5 @@ def waitForOCIS():
         "commands": [
             "wait-for -it ocis:9200 -t 300",
         ],
-        "depends_on": ["build-ocis"],
+        "depends_on": ["wait-for-oc10"],
     }]

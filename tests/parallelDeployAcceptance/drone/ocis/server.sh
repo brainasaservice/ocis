@@ -1,6 +1,6 @@
 #!/bin/sh
-cd /drone/src/ocis/bin &&
-./ocis server &
+# cd /drone/src/ocis/bin &&
+ocis server &
 sleep 10
 
 # It is nice to have the following services stopped
