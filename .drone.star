@@ -11,6 +11,7 @@ OC_CI_UBUNTU = "owncloud/ubuntu:18.04"
 OC_CI_WAITFOR = "owncloudci/wait-for:latest"
 OC_CI_GOLANG = "owncloudci/golang:1.17"
 OC_CI_NODEJS = "owncloudci/nodejs:14"
+OC_CI_ALPINE = "owncloudci/alpine:latest"
 
 # Settings
 OCIS_URL = "https://ocis:9200"
@@ -47,8 +48,8 @@ def acceptancePipeline():
             ocisServer() + 
             waitForOCIS() + 
             apiTests(),
-        "services": oc10DbService() +
-                    keycloakDbService() +
+        "services": keycloakDbService() +
+                    oc10DbService() +
                     ldapService() +
                     redisService() +
                     keycloakService(),
@@ -236,12 +237,11 @@ def ocisServer():
 
     return [{
         "name": "ocis",
-        "image": OC_CI_GOLANG,
+        "image": OC_CI_ALPINE,
         "environment": environment,
         "detach": True,
         "commands": [
             "whoami",
-            "apk add mailcap",  # install /etc/mime.types
             "%s/ocis/server.sh" % (DRONE_CONFIG_PATH),
         ],
         "volumes": [
@@ -258,7 +258,7 @@ def ocisServer():
                 "path": "/go",
             },
         ],
-        # "user": "0:0",
+        "user": "33:33",
         "depends_on": ["fix-permissions", "build-ocis"],
     }]
 

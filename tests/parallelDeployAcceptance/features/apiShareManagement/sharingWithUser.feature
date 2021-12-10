@@ -1,3 +1,8 @@
+
+# Sharing tests currently doesn't work
+# Accessing oc10 shares from ocis still WIP in PR #2232
+# https://github.com/owncloud/ocis/pull/2232
+
 Feature: sharing files and folders
   As a user
   I want to share files/folders with other users
@@ -15,6 +20,5 @@ Feature: sharing files and folders
     And user "Alice" has shared folder "PARENT" with user "Brian"
     Then the HTTP status code should be "200"
     When using "ocis" as owncloud selector
-    # # accessing oc10 shares from ocis still WIP in PR #2232
     # And user "Brian" accepts share "PARENT" offered by user "Alice" using the sharing API
     # Then the HTTP status code should be "200"
